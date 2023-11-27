@@ -1,7 +1,9 @@
 type Note {
   id: ID!
   content: String!
-  author: String!
+  author: User!
+  createdAt: Date!
+  updatedAt: Date!
 }
 
 type Query {
@@ -22,5 +24,5 @@ input UpdateNoteInput {
 type Mutation {
   createNote(newNote: NewNoteInput): Note!
   updateNote(updateNote: UpdateNoteInput): Note!
-  deleteNote(id: ID!): [Note!]!
+  deleteNote(id: ID!): Boolean!
 }

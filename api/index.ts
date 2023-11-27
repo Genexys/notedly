@@ -6,11 +6,15 @@ import http from 'http';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose, { Model } from 'mongoose';
-import { typeDefs, resolvers } from './graphql';
-import { NoteModel } from './db/models/note';
-import type { Note } from './db/models/note';
 import dotenv from 'dotenv';
 import path from 'path';
+import jwt from 'jsonwebtoken';
+import { GraphQLError } from 'graphql';
+import { typeDefs, resolvers } from './graphql';
+import { NoteModel } from './db/models/note';
+import { UserModel } from './db/models/user';
+import type { INote } from './db/models/note';
+import type { IUser } from './db/models/user';
 
 dotenv.config({
   path: path.join(__dirname, '../.env'),
@@ -18,7 +22,8 @@ dotenv.config({
 
 interface MyContext {
   models: {
-    Note: Model<Note>;
+    Note: Model<INote>;
+    User: Model<IUser>;
   };
 }
 
@@ -27,6 +32,26 @@ const DB = process.env.DB_HOST || 'localhost';
 
 const app = express();
 const httpServer = http.createServer(app);
+
+const getUser = async (token: string | undefined) => {
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
+
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return null;
+    }
+
+    return user;
+  } catch (error) {
+    new Error('Not authenticated');
+  }
+};
 
 const startApolloServer = async () => {
   try {
@@ -53,11 +78,25 @@ const startApolloServer = async () => {
     app.use(
       '/api',
       expressMiddleware(server, {
-        context: async ({ req }): Promise<MyContext> => ({
-          models: {
-            Note: NoteModel,
-          },
-        }),
+        context: async ({ req }): Promise<MyContext> => {
+          const token = req.headers.authorization;
+          const user = await getUser(token);
+
+          // if (!user) {
+          //   throw new GraphQLError('Not authenticated', {
+          //     extensions: {
+          //       code: 'UNAUTHORIZED',
+          //     },
+          //   });
+          // }
+
+          return {
+            models: {
+              Note: NoteModel,
+              User: UserModel,
+            },
+          };
+        },
       }),
     );
 

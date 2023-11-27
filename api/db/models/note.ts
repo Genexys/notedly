@@ -1,12 +1,12 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
-interface INote extends Document {
+export interface INote extends Document {
   _id: mongoose.Types.ObjectId;
   content: string;
   author: string;
 }
 
-const NoteSchema = new Schema(
+const NoteSchema = new Schema<INote>(
   {
     content: {
       type: String,
@@ -22,10 +22,4 @@ const NoteSchema = new Schema(
   },
 );
 
-export type Note = {
-  _id: mongoose.Types.ObjectId;
-  content: string;
-  author: string;
-};
-
-export const NoteModel: Model<INote> = mongoose.model<INote>('Note', NoteSchema);
+export const NoteModel = mongoose.model<INote>('Note', NoteSchema);

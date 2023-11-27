@@ -1,83 +1,61 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { Model } from 'mongoose';
-import type { Note } from '../../db/models/note';
-
-const notes = [
-  {
-    id: '1',
-    content: 'Buy milk',
-    author: 'JK Rowling',
-  },
-  {
-    id: '2',
-    content: 'TypeScript course',
-    author: 'Max',
-  },
-  {
-    id: '3',
-    content: 'GraphQL course',
-    author: 'Max',
-  },
-];
+import dateScalar from '../scalars/dateScalar';
+import type { INote } from '../../db/models/note';
 
 export const noteResolvers = {
+  Date: dateScalar,
   Query: {
     notes: async (
       parent: any,
       args: Record<string, unknown>,
-      contextValue: { models: { Note: Model<Note> } },
+      contextValue: { models: { Note: Model<INote> } },
     ) => {
       return await contextValue.models.Note.find();
     },
     note: async (
       parent: any,
       args: Record<string, unknown>,
-      { models }: Record<string, unknown>,
+      contextValue: { models: { Note: Model<INote> } },
     ) => {
-      // return await models.Note.findById(args.id);
+      return await contextValue.models.Note.findById(args.id);
     },
   },
   Mutation: {
     createNote: async (
       parent: any,
       { newNote: newNoteData }: Record<string, Record<string, unknown>>,
+      contextValue: { models: { Note: Model<INote> } },
     ) => {
-      console.log('🚀 ~ file: note.resolvers.ts:34 ~ createNote: ~ newNoteData:', newNoteData);
-      // const newNote = new models.Note({
-      //   content: String(newNoteData.content),
-      //   author: String(newNoteData.author),
-      // });
-      // console.log('🚀 ~ file: note.resolvers.ts:38 ~ createNote: ~ newNote:', newNote);
+      const newNote = new contextValue.models.Note({
+        content: String(newNoteData.content),
+        author: String(newNoteData.author),
+      });
 
-      // await newNote.save();
-      // return newNote;
+      await newNote.save();
+      return newNote;
     },
     updateNote: async (
       parent: any,
-      { updateNoteData: { id, content } }: Record<string, Record<string, unknown>>,
+      { updateNote: { id, content } }: Record<string, Record<string, unknown>>,
+      contextValue: { models: { Note: Model<INote> } },
     ) => {
-      const note = notes.find((note) => note.id === id);
-
-      if (!note) {
-        throw new Error('Note not found');
-      }
-
-      note.content = String(content);
-
-      return note;
+      return await contextValue.models.Note.findByIdAndUpdate(id, { content });
     },
-    deleteNote: async (parent: any, args: Record<string, unknown>) => {
-      const noteIndex = notes.findIndex((note) => {
-        return note.id === args.id;
-      });
-
-      if (noteIndex === -1) {
-        throw new Error('Note not found');
-      }
-
-      notes.splice(noteIndex, 1);
-
-      return notes;
+    deleteNote: async (
+      parent: any,
+      args: Record<string, unknown>,
+      contextValue: { models: { Note: Model<INote> } },
+    ) => {
+      await contextValue.models.Note.findByIdAndDelete(args.id)
+        .then((result) => {
+          if (!result) {
+            throw new Error('Note not found');
+          }
+        })
+        .catch((error) => {
+          throw new Error(error);
+        });
     },
   },
 };
