@@ -1,9 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface INote extends Document {
-  _id: mongoose.Types.ObjectId;
   content: string;
-  author: string;
+  author: mongoose.Types.ObjectId;
+  favoriteCount: number;
+  favoritedBy: mongoose.Types.ObjectId[];
 }
 
 const NoteSchema = new Schema<INote>(
@@ -13,9 +14,20 @@ const NoteSchema = new Schema<INote>(
       required: true,
     },
     author: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
+    favoriteCount: {
+      type: Number,
+      default: 0,
+    },
+    favoritedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     timestamps: true,

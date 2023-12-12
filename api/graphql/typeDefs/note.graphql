@@ -4,15 +4,23 @@ type Note {
   author: User!
   createdAt: Date!
   updatedAt: Date!
+  favoriteCount: Int!
+  favoritedBy: [User!]
+}
+
+type NoteFeed {
+  notes: [Note]!
+  cursor: String!
+  hasNextPage: Boolean!
 }
 
 type Query {
   notes: [Note!]!
   note(id: ID!): Note!
+  noteFeed(cursor: String): NoteFeed
 }
 
 input NewNoteInput {
-  author: String!
   content: String!
 }
 
@@ -25,4 +33,5 @@ type Mutation {
   createNote(newNote: NewNoteInput): Note!
   updateNote(updateNote: UpdateNoteInput): Note!
   deleteNote(id: ID!): Boolean!
+  toggleFavorite(id: ID!): Note!
 }

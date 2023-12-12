@@ -27,4 +27,10 @@ export const resolvers = {
     ...noteResolvers.Mutation,
     ...userResolvers.Mutation,
   },
+  User: {
+    ...userResolvers.User,
+  },
+  Note: {
+    ...noteResolvers.Note,
+  },
 };

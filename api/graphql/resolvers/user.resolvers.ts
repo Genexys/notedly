@@ -1,29 +1,46 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { Model } from 'mongoose';
 import { GraphQLError } from 'graphql';
+import { IUser } from '../../db/models/user';
 
 export const userResolvers = {
   Query: {
-    users: async (
-      parent: any,
-      args: Record<string, unknown>,
-      contextValue: { models: { User: any } },
-    ) => {
-      return await contextValue.models.User.find();
-    },
     user: async (
       parent: any,
       args: Record<string, unknown>,
-      contextValue: { models: { User: any } },
+      contextValue: { models: { User: Model<IUser> } },
     ) => {
-      return await contextValue.models.User.findById(args.id);
+      if (!args.username) {
+        throw new GraphQLError('Please provide a username');
+      }
+
+      return await contextValue.models.User.findOne({ username: args.username });
+    },
+    users: async (
+      parent: any,
+      args: Record<string, unknown>,
+      contextValue: { models: { User: Model<IUser> } },
+    ) => {
+      return await contextValue.models.User.find().limit(100);
+    },
+    me: async (
+      parent: any,
+      args: Record<string, unknown>,
+      contextValue: { models: { User: Model<IUser> }; user: IUser },
+    ) => {
+      if (!contextValue.user) {
+        throw new GraphQLError('Not authenticated');
+      }
+
+      return await contextValue.models.User.findById(contextValue.user.id);
     },
   },
   Mutation: {
     signIn: async (
       parent: any,
       { loginUser: { email, password } }: Record<string, Record<string, string>>,
-      contextValue: { models: { User: any } },
+      contextValue: { models: { User: Model<IUser> } },
     ) => {
       const user = await contextValue.models.User.findOne({ email });
 
@@ -48,7 +65,7 @@ export const userResolvers = {
     signUp: async (
       parent: any,
       { newUser: { username, email, password } }: Record<string, Record<string, string>>,
-      contextValue: { models: { User: any } },
+      contextValue: { models: { User: Model<IUser> } },
     ) => {
       if (!username || !email || !password) {
         throw new GraphQLError('Please provide username, email and password');
@@ -95,6 +112,26 @@ export const userResolvers = {
       );
 
       return token;
+    },
+  },
+  User: {
+    notes: async (
+      user: IUser,
+      args: Record<string, unknown>,
+      contextValue: { models: { Note: Model<any> } },
+    ) => {
+      return await contextValue.models.Note.find({ author: user.id }).sort({
+        _id: -1,
+      });
+    },
+    favorites: async (
+      user: IUser,
+      args: Record<string, unknown>,
+      contextValue: { models: { Note: Model<any> } },
+    ) => {
+      return await contextValue.models.Note.find({ favoritedBy: user.id }).sort({
+        _id: -1,
+      });
     },
   },
 };

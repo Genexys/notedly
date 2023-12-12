@@ -2,6 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import express from 'express';
+import helmet from 'helmet';
 import http from 'http';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -9,7 +10,7 @@ import mongoose, { Model } from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
 import jwt from 'jsonwebtoken';
-import { GraphQLError } from 'graphql';
+import { ApolloArmor } from '@escape.tech/graphql-armor';
 import { typeDefs, resolvers } from './graphql';
 import { NoteModel } from './db/models/note';
 import { UserModel } from './db/models/user';
@@ -25,15 +26,17 @@ interface MyContext {
     Note: Model<INote>;
     User: Model<IUser>;
   };
+  user: IUser | null;
 }
 
 const PORT = process.env.PORT || 3000;
 const DB = process.env.DB_HOST || 'localhost';
 
 const app = express();
+app.use(helmet());
 const httpServer = http.createServer(app);
 
-const getUser = async (token: string | undefined) => {
+const getUser = async (token: string | undefined): Promise<IUser | null> => {
   if (!token) {
     return null;
   }
@@ -50,6 +53,8 @@ const getUser = async (token: string | undefined) => {
     return user;
   } catch (error) {
     new Error('Not authenticated');
+
+    return null;
   }
 };
 
@@ -57,17 +62,22 @@ const startApolloServer = async () => {
   try {
     await mongoose
       .connect(DB)
-      .then(() => {
-        console.log('Connected to MongoDB');
+      .then((result) => {
+        console.log('Connected to MongoDB', result.connection.name);
       })
       .catch((error) => {
         console.error('Error connecting to MongoDB:', error);
       });
 
+    const armor = new ApolloArmor();
+    const protection = armor.protect();
+
     const server = new ApolloServer<MyContext>({
       typeDefs,
       resolvers,
-      plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+      ...protection,
+      plugins: [...protection.plugins, ApolloServerPluginDrainHttpServer({ httpServer })],
+      validationRules: [...protection.validationRules],
     });
 
     await server.start();
@@ -82,19 +92,12 @@ const startApolloServer = async () => {
           const token = req.headers.authorization;
           const user = await getUser(token);
 
-          // if (!user) {
-          //   throw new GraphQLError('Not authenticated', {
-          //     extensions: {
-          //       code: 'UNAUTHORIZED',
-          //     },
-          //   });
-          // }
-
           return {
             models: {
               Note: NoteModel,
               User: UserModel,
             },
+            user,
           };
         },
       }),
