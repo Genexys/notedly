@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import path from 'path';
+
 import { noteResolvers } from './resolvers/note.resolvers';
 import { userResolvers } from './resolvers/user.resolvers';
 

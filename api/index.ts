@@ -1,21 +1,22 @@
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { ApolloArmor } from '@escape.tech/graphql-armor';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import dotenv from 'dotenv';
 import express from 'express';
 import helmet from 'helmet';
 import http from 'http';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import mongoose, { Model } from 'mongoose';
-import dotenv from 'dotenv';
-import path from 'path';
 import jwt from 'jsonwebtoken';
-import { ApolloArmor } from '@escape.tech/graphql-armor';
-import { typeDefs, resolvers } from './graphql';
+import mongoose, { Model } from 'mongoose';
+import path from 'path';
+
 import { NoteModel } from './db/models/note';
-import { UserModel } from './db/models/user';
 import type { INote } from './db/models/note';
+import { UserModel } from './db/models/user';
 import type { IUser } from './db/models/user';
+import { typeDefs, resolvers } from './graphql';
 
 dotenv.config({
   path: path.join(__dirname, '../.env'),
@@ -52,7 +53,8 @@ const getUser = async (token: string | undefined): Promise<IUser | null> => {
 
     return user;
   } catch (error) {
-    new Error('Not authenticated');
+    Error('Not authenticated');
+    console.error(error);
 
     return null;
   }

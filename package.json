@@ -2,9 +2,10 @@
   "name": "nodely",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon api/index.ts"
+    "server": "nodemon api/index.ts",
+    "client": "vite client"
   },
   "keywords": [],
   "author": "",
@@ -40,7 +41,8 @@
     "react-native-modal": "^13.0.1",
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "react-router-dom": "^6.21.0"
   },
   "devDependencies": {
     "@tsconfig/react-native": "^3.0.2",
@@ -50,14 +52,21 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/react": "~18.2.14",
+    "@types/react-dom": "^18.2.17",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "@vitejs/plugin-react": "^4.2.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-universe": "^12.0.0",
     "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
     "nodemon": "^3.0.1",
     "prettier": "^3.1.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.2",
+    "vite": "^5.0.8"
   }
 }

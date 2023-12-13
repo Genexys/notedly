@@ -1,28 +1,29 @@
 import { GraphQLError } from 'graphql';
-import mongoose, { Model, Schema } from 'mongoose';
-import dateScalar from '../scalars/dateScalar';
+import mongoose, { Model } from 'mongoose';
+
 import type { INote } from '../../db/models/note';
 import { IUser } from '../../db/models/user';
+import dateScalar from '../scalars/dateScalar';
 
 export const noteResolvers = {
   Date: dateScalar,
   Query: {
     notes: async (
-      parent: any,
+      _parent,
       args: Record<string, unknown>,
       contextValue: { models: { Note: Model<INote> } },
     ) => {
       return await contextValue.models.Note.find().limit(100);
     },
     note: async (
-      parent: any,
+      _parent,
       args: Record<string, unknown>,
       contextValue: { models: { Note: Model<INote> } },
     ) => {
       return await contextValue.models.Note.findById(args.id);
     },
     noteFeed: async (
-      parent: any,
+      _parent,
       { cursor }: Record<string, unknown>,
       contextValue: { models: { Note: Model<INote> } },
     ) => {
@@ -54,7 +55,7 @@ export const noteResolvers = {
   },
   Mutation: {
     createNote: async (
-      parent: any,
+      _parent,
       { newNote: newNoteData }: Record<string, Record<string, unknown>>,
       contextValue: { models: { Note: Model<INote> }; user: IUser },
     ) => {
@@ -76,7 +77,7 @@ export const noteResolvers = {
       return newNote;
     },
     updateNote: async (
-      parent: any,
+      _parent,
       { updateNote: { id, content } }: Record<string, Record<string, unknown>>,
       contextValue: { models: { Note: Model<INote> }; user: IUser },
     ) => {
@@ -93,7 +94,7 @@ export const noteResolvers = {
       return await contextValue.models.Note.findByIdAndUpdate(id, { content }, { new: true });
     },
     deleteNote: async (
-      parent: any,
+      _parent,
       args: Record<string, unknown>,
       contextValue: { models: { Note: Model<INote> }; user: IUser },
     ) => {
@@ -120,7 +121,7 @@ export const noteResolvers = {
         });
     },
     toggleFavorite: async (
-      parent: any,
+      _parent,
       args: Record<string, unknown>,
       contextValue: { models: { Note: Model<INote> }; user: IUser },
     ) => {
@@ -128,7 +129,7 @@ export const noteResolvers = {
         throw new GraphQLError('You must be authenticated to create a note');
       }
 
-      let noteCheck = await contextValue.models.Note.findById(args.id);
+      const noteCheck = await contextValue.models.Note.findById(args.id);
       const hasUser = noteCheck?.favoritedBy.indexOf(contextValue.user.id);
 
       if (hasUser === -1) {

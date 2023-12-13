@@ -1,6 +1,12 @@
 {
   "parser": "@typescript-eslint/parser",
-  "extends": ["'universe/native',", "plugin:@typescript-eslint/recommended", "prettier"],
+  "extends": [
+    "eslint:recommended",
+    "universe/native",
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
   "settings": {
     "react": {
       "version": "detect"

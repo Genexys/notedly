@@ -1,13 +1,15 @@
 import bcrypt from 'bcryptjs';
+import { GraphQLError } from 'graphql';
 import jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
-import { GraphQLError } from 'graphql';
+
+import { INote } from '../../db/models/note';
 import { IUser } from '../../db/models/user';
 
 export const userResolvers = {
   Query: {
     user: async (
-      parent: any,
+      parent: unknown,
       args: Record<string, unknown>,
       contextValue: { models: { User: Model<IUser> } },
     ) => {
@@ -18,14 +20,14 @@ export const userResolvers = {
       return await contextValue.models.User.findOne({ username: args.username });
     },
     users: async (
-      parent: any,
+      parent: unknown,
       args: Record<string, unknown>,
       contextValue: { models: { User: Model<IUser> } },
     ) => {
       return await contextValue.models.User.find().limit(100);
     },
     me: async (
-      parent: any,
+      parent: unknown,
       args: Record<string, unknown>,
       contextValue: { models: { User: Model<IUser> }; user: IUser },
     ) => {
@@ -38,7 +40,7 @@ export const userResolvers = {
   },
   Mutation: {
     signIn: async (
-      parent: any,
+      parent: unknown,
       { loginUser: { email, password } }: Record<string, Record<string, string>>,
       contextValue: { models: { User: Model<IUser> } },
     ) => {
@@ -63,7 +65,7 @@ export const userResolvers = {
       return token;
     },
     signUp: async (
-      parent: any,
+      parent: unknown,
       { newUser: { username, email, password } }: Record<string, Record<string, string>>,
       contextValue: { models: { User: Model<IUser> } },
     ) => {
@@ -118,7 +120,7 @@ export const userResolvers = {
     notes: async (
       user: IUser,
       args: Record<string, unknown>,
-      contextValue: { models: { Note: Model<any> } },
+      contextValue: { models: { Note: Model<INote> } },
     ) => {
       return await contextValue.models.Note.find({ author: user.id }).sort({
         _id: -1,
@@ -127,7 +129,7 @@ export const userResolvers = {
     favorites: async (
       user: IUser,
       args: Record<string, unknown>,
-      contextValue: { models: { Note: Model<any> } },
+      contextValue: { models: { Note: Model<INote> } },
     ) => {
       return await contextValue.models.Note.find({ favoritedBy: user.id }).sort({
         _id: -1,
