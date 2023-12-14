@@ -1,11 +1,8 @@
 import Pages from './pages';
+import './global.css';
 
 function App() {
-  return (
-    <>
-      <Pages />
-    </>
-  );
+  return <Pages />;
 }
 
 export default App;

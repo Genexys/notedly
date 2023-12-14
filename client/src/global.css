@@ -1,0 +1,50 @@
+:root {
+  --padding-size: 30px;
+  --primary: #61777F;
+  --primary-text: #130912;
+  --main-bg: #FAFAFA;
+  --button-shadow: #000;
+  --button-shadow-alpha: #000c;
+  --hero-background: #222429;
+  --hero-background-opacity: 0.2;
+  --font-family: alegreyasanssc-regular, san-serif;
+  --z-index-header: 1;
+}
+
+@font-face {
+  font-family: AlegreyaSansSC-Regular;
+  src:
+    url('../assets/fonts/AlegreyaSansSC-Regular.woff2') format('woff2'),
+    url('../assets/fonts/AlegreyaSansSC-Regular.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: ArchivoNarrow-Regular;
+  src:
+    url('../assets/fonts/ArchivoNarrow-Regular.woff2') format('woff2'),
+    url('../assets/fonts/ArchivoNarrow-Regular.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  color: var(--primary-text)
+}
+
+#root {
+  height: 100%;
+}

@@ -4,7 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import Error from './Error';
 import Favorites from './Favorites';
 import Home from './Home';
-import Layout from './Layout';
+import Layout from './Layout/Layout';
 import MyNotes from './MyNotes';
 
 const Pages: React.FC = () => {

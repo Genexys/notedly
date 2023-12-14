@@ -1,0 +1,25 @@
+.navigation {
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--padding-size);
+  padding-inline: var(--padding-size);
+}
+
+.navigation ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navigation li {
+  margin-bottom: 10px;
+}
+
+.navigation a {
+  text-decoration: none;
+  color: var(--primary-text);
+}
+
+.navigation a:hover {
+  text-decoration: underline;
+}
