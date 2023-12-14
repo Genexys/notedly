@@ -1,5 +1,5 @@
 {
-  "watch": ["api"],
+  "watch": ["./"],
   "ext": "ts, js, json",
   "execMap": {
     "ts": "cross-env NODE_ENV=development ts-node -T"
