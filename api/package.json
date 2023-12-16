@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "api for simple-notes",
   "scripts": {
-    "server": "nodemon index.ts"
+    "api:dev": "nodemon index.ts",
+    "api:prod": "npx ts-node index.ts"
   },
   "keywords": [],
   "author": "genexys",

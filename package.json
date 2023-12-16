@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "client": "npm run client --workspace=client",
-    "api": "npm run server --workspace=api"
+    "api:prod": "npm run api:prod --workspace=api",
+    "api:dev": "npm run api:dev --workspace=api"
   },
   "keywords": [],
   "author": "genexys",

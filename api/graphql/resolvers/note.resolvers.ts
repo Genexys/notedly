@@ -9,21 +9,21 @@ export const noteResolvers = {
   Date: dateScalar,
   Query: {
     notes: async (
-      _parent,
+      parent: unknown,
       args: Record<string, unknown>,
       contextValue: { models: { Note: Model<INote> } },
     ) => {
       return await contextValue.models.Note.find().limit(100);
     },
     note: async (
-      _parent,
+      parent: unknown,
       args: Record<string, unknown>,
       contextValue: { models: { Note: Model<INote> } },
     ) => {
       return await contextValue.models.Note.findById(args.id);
     },
     noteFeed: async (
-      _parent,
+      parent: unknown,
       { cursor }: Record<string, unknown>,
       contextValue: { models: { Note: Model<INote> } },
     ) => {
@@ -55,7 +55,7 @@ export const noteResolvers = {
   },
   Mutation: {
     createNote: async (
-      _parent,
+      parent: unknown,
       { newNote: newNoteData }: Record<string, Record<string, unknown>>,
       contextValue: { models: { Note: Model<INote> }; user: IUser },
     ) => {
@@ -77,7 +77,7 @@ export const noteResolvers = {
       return newNote;
     },
     updateNote: async (
-      _parent,
+      parent: unknown,
       { updateNote: { id, content } }: Record<string, Record<string, unknown>>,
       contextValue: { models: { Note: Model<INote> }; user: IUser },
     ) => {
@@ -94,7 +94,7 @@ export const noteResolvers = {
       return await contextValue.models.Note.findByIdAndUpdate(id, { content }, { new: true });
     },
     deleteNote: async (
-      _parent,
+      parent: unknown,
       args: Record<string, unknown>,
       contextValue: { models: { Note: Model<INote> }; user: IUser },
     ) => {
@@ -121,7 +121,7 @@ export const noteResolvers = {
         });
     },
     toggleFavorite: async (
-      _parent,
+      parent: unknown,
       args: Record<string, unknown>,
       contextValue: { models: { Note: Model<INote> }; user: IUser },
     ) => {
