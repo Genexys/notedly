@@ -6,6 +6,7 @@ import Favorites from './Favorites';
 import Home from './Home';
 import Layout from './Layout/Layout';
 import MyNotes from './MyNotes';
+import NotePage from './Note';
 
 const Pages: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const Pages: React.FC = () => {
         <Route index element={<Home />} />
         <Route path="my-notes" element={<MyNotes />} />
         <Route path="favorites" element={<Favorites />} />
+        <Route path="note/:id" element={<NotePage />} />
 
         <Route path="*" element={<Error />} />
       </Route>

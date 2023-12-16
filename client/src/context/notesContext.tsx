@@ -14,7 +14,7 @@ type DataNotes = {
 
 type TNote = {
   id: string;
-  createdAt: string;
+  createdAt: number;
   content: string;
   favoriteCount: number;
   author: {
@@ -22,7 +22,7 @@ type TNote = {
   };
 };
 
-export type TNotes = TNote[] | undefined;
+export type TNotes = TNote[];
 
 type TDataNotes = {
   data: DataNotes | undefined;

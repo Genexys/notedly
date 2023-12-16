@@ -1,5 +1,5 @@
 .aside {
   display: flex;
   flex-direction: column;
-  background-color: #E77917;
+  background-color: var(--primary);
 }

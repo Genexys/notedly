@@ -1,0 +1,52 @@
+.note {
+  display: flex;
+  flex-direction: column;
+}
+
+.note:not(:last-of-type) {
+  margin-bottom: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  padding-left: calc(var(--padding-size) / 2);
+  padding-right: calc(var(--padding-size) / 2);
+  background-color: var(--hero-background);
+  color: #fff;
+}
+
+.author {
+  font-size: 20px;
+}
+
+.date {
+  font-size: 14px;
+}
+
+.content {
+  padding: calc(var(--padding-size) / 2);
+  background-color: var(--primary-grey);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  padding-inline: calc(var(--padding-size) / 2);
+  padding-bottom: calc(var(--padding-size) / 2);
+  background-color: var(--primary-grey);
+}
+
+.favorites {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.link a {
+  text-decoration: none;
+  color: var(--primary-text);
+}

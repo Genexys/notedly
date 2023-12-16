@@ -5,6 +5,7 @@ import { useNotesContext } from '../context/notesContext';
 
 const Home = () => {
   const { data, loading, error } = useNotesContext();
+  const notes = data?.noteFeed?.notes;
 
   if (loading) {
     return <div>Loading</div>;
@@ -16,7 +17,7 @@ const Home = () => {
 
   return (
     <div>
-      <NoteFeed notes={data?.noteFeed?.notes} />
+      <NoteFeed notes={notes} />
     </div>
   );
 };
