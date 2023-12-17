@@ -3,7 +3,7 @@ import React, { createContext, useContext, useMemo } from 'react';
 
 import { GET_NOTES } from '../queries/getNotes';
 
-type DataNotes = {
+export type DataNotes = {
   noteFeed: {
     cursor: string;
     hasNextPage: boolean;
@@ -24,10 +24,24 @@ type TNote = {
 
 export type TNotes = TNote[];
 
+export type FetchMoreArgs = {
+  cursor: string | undefined;
+};
+
 type TDataNotes = {
   data: DataNotes | undefined;
   loading: boolean;
   error: ApolloError | undefined;
+  fetchMore: ({
+    variables: { cursor },
+    updateQuery,
+  }: {
+    variables: FetchMoreArgs;
+    updateQuery: (
+      prev: DataNotes,
+      { fetchMoreResult }: { fetchMoreResult: DataNotes },
+    ) => DataNotes;
+  }) => void;
 };
 
 type TNotesProviderProps = {
@@ -37,15 +51,16 @@ type TNotesProviderProps = {
 const Context = createContext<TDataNotes | null>(null);
 
 const NotesProvider: React.FC<TNotesProviderProps> = ({ children }) => {
-  const { data, loading, error } = useQuery<DataNotes>(GET_NOTES);
+  const { data, loading, error, fetchMore } = useQuery<DataNotes>(GET_NOTES);
 
   const value = useMemo(() => {
     return {
       data,
       loading,
       error,
+      fetchMore,
     };
-  }, [data, loading, error]);
+  }, [data, loading, error, fetchMore]);
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
