@@ -1,0 +1,45 @@
+.button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: #0056b3;
+  border-radius: 5px;
+  z-index: -1;
+  transition: transform 0.3s;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.button:hover::after {
+  transform: scaleX(1);
+}
+
+.button:focus {
+  box-shadow: 0 0 0 2px rgba(0 123 255 / 50%);
+}
+
+.button:active {
+  background-color: #0056b3;
+}
+
+.primary {
+  background-color: var(--primary);
+}
+
+.primary::after {
+  background-color: var(--hero-background);
+}

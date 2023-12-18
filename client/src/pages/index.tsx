@@ -7,6 +7,7 @@ import Home from './Home';
 import Layout from './Layout/Layout';
 import MyNotes from './MyNotes';
 import NotePage from './Note';
+import SignUp from './SignUp';
 
 const Pages: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const Pages: React.FC = () => {
         <Route path="my-notes" element={<MyNotes />} />
         <Route path="favorites" element={<Favorites />} />
         <Route path="note/:id" element={<NotePage />} />
+        <Route path="signUp" element={<SignUp />} />
 
         <Route path="*" element={<Error />} />
       </Route>
